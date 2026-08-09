@@ -139,7 +139,7 @@ class PhoneToUsernameTikTok:
         'Priority': 'u=0',
     }
     json_data = {
-        'address': "".join(random.choices(string.ascii_lowercase + string.digits, k=12)) + '@web-library.net',
+        'address': "".join(random.choices(string.ascii_lowercase + string.digits, k=12)) + '@emalupe.com',
         'password': 'NtroAtro',
     }
     response = requests.post('https://api.mail.tm/accounts', headers=headers, json=json_data, proxies=GLOBAL_PROXIES)
