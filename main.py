@@ -42,7 +42,12 @@ class PhoneToUsernameTikTok:
        
    def xor(self, string: str) -> str:
       return "".join([hex(ord(c) ^ 5)[2:] for c in string])
-      
+   def __get_domins(self) -> str:
+       try:
+           r = requests.get("https://api.mail.tm/domains").json()
+           return r["hydra:member"][0]["domain"]
+       except IndexError:
+           return None   
    def __get_param(self) -> dict:
        return {
         "request_tag_from": "h5",
@@ -124,7 +129,7 @@ class PhoneToUsernameTikTok:
     except:
         return None
 
-   async def __get_email(self) -> dict[str:str, str:str]:
+   async def __get_email(self,domin:str) -> dict[str:str, str:str]:
     headers = {
         'User-Agent': str(generate_user_agent()),
         'Accept': 'application/json',
@@ -139,7 +144,7 @@ class PhoneToUsernameTikTok:
         'Priority': 'u=0',
     }
     json_data = {
-        'address': "".join(random.choices(string.ascii_lowercase + string.digits, k=12)) + '@emalupe.com',
+        'address': "".join(random.choices(string.ascii_lowercase + string.digits, k=12)) + '@'+domin,
         'password': 'NtroAtro',
     }
     response = requests.post('https://api.mail.tm/accounts', headers=headers, json=json_data, proxies=GLOBAL_PROXIES)
@@ -222,7 +227,8 @@ class PhoneToUsernameTikTok:
             continue
 
    async def send_code(self) -> str:
-      tmMail = await self.__get_email() 
+      domin = self.__get_domins()
+      tmMail = await self.__get_email(domin=domin) 
       email = tmMail["email"]
       if email == None:
           return await self.send_code()
